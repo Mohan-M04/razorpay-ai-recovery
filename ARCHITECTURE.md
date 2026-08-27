@@ -1,127 +1,119 @@
-# 📐 System Architecture Specification: RazorRecover AI
+# 📐 Full-Stack System Architecture: RazorRecover AI
 **Track 03: AI Revenue Recovery — Razorpay AI Buildathon 2026**
 
 ---
 
-## 1. Executive Summary
+## 1. Architectural Overview
 
-RazorRecover AI is designed as a **hybrid deterministic/autonomous state machine** for payment failure mitigation. In financial transactions, unbounded LLM agent autonomy presents severe operational and brand risks (e.g. infinite retries, harassing customers, generating unauthorized discounts).
-
-RazorRecover AI solves this by decoupling:
-1. **The Diagnostic Layer (AI Reasoner):** Interprets noisy gateway failure messages, customer transaction history, and temporal indicators to formulate an optimal recovery hypothesis.
-2. **The Guardrail Layer (Deterministic Policy Engine):** Hard boundaries enforced in code that strictly gate, throttle, or halt any monetary action before execution.
-3. **The Execution Layer (Tool Rail):** Direct integration with Razorpay test APIs and customer communication channels.
-4. **The Audit Layer (Immutable Event Store):** Structured logging of state transitions, reasoning strings, and verification proofs.
-
----
-
-## 2. State Machine & Lifecycle Transitions
-
-Every payment event adheres to a strict directed acyclic graph (DAG) of state transitions:
+RazorRecover AI is structured as a **full-stack fintech recovery platform** that balances autonomous AI conversational capabilities with strict deterministic boundaries:
 
 ```
-                  ┌──────────────────────────────┐
-                  │  WEBHOOK INGESTION (FAILED)  │
-                  └──────────────┬───────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │      EVALUATE GUARDRAILS     │
-                  └──────┬───────────────┬───────┘
-                         │               │
-            [Violated]   │               │   [Passed]
-                         ▼               ▼
-          ┌────────────────────┐   ┌───────────────────────────┐
-          │  HALT / ESCALATE   │   │   AI DIAGNOSTIC REASONER  │
-          │ (STOPPED/ESCALATED)│   └─────────────┬─────────────┘
-          └────────────────────┘                 │
-                                                 ▼
-                                   ┌───────────────────────────┐
-                                   │  DISPATCH RECOVERY PLAY   │
-                                   │       (IN_RECOVERY)       │
-                                   └─────────────┬─────────────┘
-                                                 │
-                                ┌────────────────┴────────────────┐
-                                │                                 │
-                     [Customer Pays / Retry OK]      [Link Expires / Max Attempts]
-                                ▼                                 ▼
-                   ┌─────────────────────────┐       ┌─────────────────────────┐
-                   │    VERIFIED SETTLEMENT  │       │     GRACEFUL STOP       │
-                   │       (RECOVERED)       │       │        (STOPPED)        │
-                   └─────────────────────────┘       └─────────────────────────┘
++-------------------------------------------------------------------------+
+|                  FRONTEND LAYER (React 19 + TypeScript)                 |
+|  - Executive KPI Cards: Real-time Recovery Metrics, At-Risk Monitoring  |
+|  - Interactive Batch Runner: Live Diagnostic Evaluation Feed            |
+|  - Inspector Modal: Audit Trail Timeline, WhatsApp Nudge Previews       |
++------------------------------------+------------------------------------+
+                                     │
+                                     ▼
++-------------------------------------------------------------------------+
+|                 BACKEND & AGENT LAYER (Python 3.12 + SQLite)            |
+|  - State Machine Sequencer: Reason-based retry scheduling               |
+|  - Safety Gates: Max 3 retries, 24h cooldown, opt-out enforcement       |
+|  - Promise-to-Pay (PTP) Tracker: Due date monitoring & reminder engine  |
+|  - "RazorPay Recovery" Voice Assistant: STT -> LLM -> TTS pipeline      |
+|  - Immutable Audit Logger: Append-only SQLite event store               |
++------------------------------------+------------------------------------+
+                                     │
+                                     ▼
++-------------------------------------------------------------------------+
+|                    RAZORPAY INTEGRATION & TEST RAILS                    |
+|  - Razorpay Payment Links API (/v1/payment_links)                       |
+|  - Optimizer Smart Routing Simulation                                   |
+|  - Subscription Webhook Ingestion (/v1/subscriptions)                   |
++-------------------------------------------------------------------------+
 ```
 
-### State Definitions:
-* **`FAILED`:** Raw payment failure webhook captured from Razorpay gateway rail.
-* **`DIAGNOSING`:** AI analyzing error payload, customer persona, and temporal context.
-* **`IN_RECOVERY`:** Bounded action executed (retry scheduled, WhatsApp payment link dispatched).
-* **`RECOVERED`:** Webhook confirms settlement of original order or associated payment link.
-* **`STOPPED`:** Recovery sequence terminated gracefully (opt-out, expiration, or maximum attempt cap reached).
-* **`ESCALATED`:** Transaction value exceeds autonomous policy threshold ($\ge$ ₹25,000); transferred to human merchant account manager.
-
 ---
 
-## 3. Failure Classification & Recovery Archetypes
+## 2. Failure-Reason-Driven State Machine
 
-| Failure Code | Underlying Root Cause | Recovery Archetype | Primary Channel | Safety Limit |
-|---|---|---|---|---|
-| `BANK_DOWNTIME` | Remitter CBS switch degraded or NPCI timeout | `SMART_RETRY_BACKOFF` | Automated Gateway Switch | Max 2 retries with 15m exponential backoff |
-| `INSUFFICIENT_FUNDS` | Temporary liquidity constraint | `PAYDAY_NUDGE_PAYMENT_LINK` | WhatsApp + Razorpay Link | 1 link, 72-hour expiry, scheduled near salary window |
-| `MANDATE_EXPIRED` | UPI Autopay / e-NACH validity ended | `INSTANT_MANDATE_RENEWAL` | WhatsApp 1-Tap Auth | Pre-filled mandate registration token |
-| `USER_DROP_OFF` | Abandoned at 3DS OTP verification | `WHATSAPP_ASSISTED_CHECKOUT` | WhatsApp Conversational | Reserved cart token, 2-hour window |
-| `CARD_EXPIRED` | Card token invalidated by issuer | `GRACEFUL_DEAL_EXPIRY_ALERT` | SMS / WhatsApp | Prompt to switch to UPI / Netbanking |
-| `LIMIT_EXCEEDED` | Daily UPI transfer velocity cap reached | `PAYDAY_NUDGE_PAYMENT_LINK` | WhatsApp (Next Day Nudge) | Scheduled 8 hours later on counter reset |
+The recovery engine categorizes payment failures into four distinct operational archetypes:
 
----
-
-## 4. Policy Guardrails & Compliance Enforcements
-
-RazorRecover AI enforces 5 non-negotiable guardrails:
-
-```typescript
-export class RecoveryAgent {
-  private static MAX_ALLOWED_ATTEMPTS = 3;
-  private static HIGH_VALUE_THRESHOLD = 25000; // INR
-  // ...
-}
+```
+               ┌────────────────────────────────────────┐
+               │    FAILED PAYMENT INGESTION (DB)       │
+               └───────────────────┬────────────────────┘
+                                   │
+                      [Reason-Based Scheduling]
+                                   │
+        ┌──────────────────────────┼──────────────────────────┐
+        ▼                          ▼                          ▼
+┌──────────────────┐       ┌──────────────────┐       ┌──────────────────┐
+│ IN_RETRY_SCHEDULE│       │ VOICE_ESCALATED  │       │  CARD_UPDATE     │
+│ (timeout / funds)│       │ (bank_declined)  │       │  (card_expired)  │
+└────────┬─────────┘       └────────┬─────────┘       └────────┬─────────┘
+         │                          │                          │
+    [Retry OK]                [Voice Turn]                [Link Paid]
+         │                          │                          │
+         ▼                          ▼                          ▼
+┌──────────────────┐       ┌──────────────────┐       ┌──────────────────┐
+│    RECOVERED     │       │    PTP_ACTIVE    │       │     STOPPED      │
+│  (Channel: Auto) │       │   (Promise Due)  │       │(Opt-out/Max Try) │
+└──────────────────┘       └──────────────────┘       └──────────────────┘
 ```
 
-1. **`GR_01_ATTEMPT_LIMIT`:** Maximum of 3 autonomous customer touches across all channels. Any further touches violate brand safety and trigger `ENFORCE_STOPPING_RULE`.
-2. **`GR_02_CHANNEL_CONSENT`:** Verification that customer has not opted out via TRAI DND regulations or previous opt-out payloads.
-3. **`GR_03_AMOUNT_GATE`:** Transactions $\ge$ ₹25,000 are structurally prevented from receiving automated nudges; an executive escalation ticket is created for human handling.
-4. **`GR_04_IDEMPOTENT_LINK`:** Payment links are cryptographically keyed to the exact order ID to prevent multiple debits for a single purchase.
-5. **`GR_05_DEFENSE_ONLY`:** No automated charging without explicit user-initiated authorization (following RBI 2FA directives).
+1. **`card_expired`:** Card tokens cannot be charged. The engine dispatches a secure 1-click Razorpay card update link and blocks all automated retry attempts.
+2. **`insufficient_funds`:** Backoff retry scheduled for 48 hours later, aligning with consumer liquidity replenishment.
+3. **`gateway_timeout`:** Fast automated retry scheduled for 30 minutes later, capturing remitter CBS switch recovery.
+4. **`bank_declined`:** Escalated to conversational voice recovery to resolve issuer security blocks.
 
 ---
 
-## 5. Razorpay Integration Architecture
+## 3. "RazorPay Recovery" Hinglish Voice Agent
 
-The service interacts with Razorpay's modern rails:
-* **Payment Links API (`/v1/payment_links`):** Generates short URLs with SMS/WhatsApp notifications and automatic reminders.
-* **Smart Routing (Optimizer):** Bypasses degraded banking rails during `SMART_RETRY_BACKOFF` flows.
-* **Webhooks:** Ingests `payment.failed`, `payment_link.paid`, `mandate.failed`, and `settlement.created`.
+The conversational assistant engages customers through a modular STT $\rightarrow$ LLM $\rightarrow$ TTS pipeline:
+
+### Behavioral Guarantees:
+* **Tone:** Polite, respectful Hinglish tailored for Indian digital consumers.
+* **Greeting:** Opens with customer name, exact failed amount, and merchant name.
+* **Single Focus:** Offers exactly one next step per turn.
+* **Sentence Bound:** Strictly under 3 sentences per dialogue turn.
+* **Promise-to-Pay (PTP):** Automatically parses customer pay-later commitments, registers due dates, and sets reminder hooks.
+* **Opt-Out Compliance:** Any refusal (*"Cancel kar do"*, *"Call mat karo"*) immediately triggers `OPT_OUT_HARD_STOP`, marking the case `STOPPED` and permanently terminating contact.
 
 ---
 
-## 6. Audit Trail Schema & Observability
+## 4. Safety Gates & Honest Failure Modes
 
-Every action is stored as a tamper-evident audit record:
-```json
-{
-  "id": "aud_k9x2m4p",
-  "transactionId": "pay_98a7s6d5",
-  "timestamp": "2026-08-27T22:30:00.000Z",
-  "action": "FORMULATE_RECOVERY_PLAN",
-  "actor": "AI_REASONER",
-  "details": "Strategy: PAYDAY_NUDGE_PAYMENT_LINK | Diagnosis: Debit declined due to insufficient balance...",
-  "stateFrom": "FAILED",
-  "stateTo": "IN_RECOVERY",
-  "metadata": {
-    "channel": "WHATSAPP",
-    "confidence": "0.94",
-    "paymentLink": "https://rzp.io/i/8x9f2a"
-  }
-}
+```python
+class SafetyGates:
+    MAX_TOTAL_RETRIES = 3
+    MIN_CONTACT_COOLDOWN_HOURS = 24
+    MAX_VOICE_ATTEMPTS = 2
 ```
 
-These logs can be exported as standard JSON or streamed into ClickHouse/Snowflake for regulatory and compliance audits.
+1. **Max 3 Retries:** Hard stop to prevent bank retry penalties.
+2. **24h Cooldown:** Zero touches permitted within 24 hours of prior contact.
+3. **Max 2 Voice Calls:** Caps voice outreach to protect brand trust.
+4. **Honest Failure Handling:** When all attempts are exhausted, cases are marked `STOPPED` and flagged for human merchant review. No infinite loops.
+
+---
+
+## 5. Audit Trail & Verification
+
+Every action is persisted in SQLite with structured JSON metadata, actors, previous states, and timestamps:
+```sql
+CREATE TABLE audit_logs (
+    log_id TEXT PRIMARY KEY,
+    timestamp TEXT NOT NULL,
+    subscription_id TEXT NOT NULL,
+    actor TEXT NOT NULL,
+    action TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    state_from TEXT NOT NULL,
+    state_to TEXT NOT NULL,
+    metadata TEXT NOT NULL
+);
+```
+Audit trails are exportable via the web dashboard or CLI for compliance reviews.

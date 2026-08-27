@@ -1,8 +1,27 @@
-node_modules
-dist
-dist-ssr
+# Dependencies
+node_modules/
+.venv/
+env/
+venv/
+
+# Build artifacts & caches
+dist/
+dist-ssr/
+.vite/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local data & environment
 *.local
+*.db
+*.sqlite3
 .env
 .env.*
+
+# OS files
 .DS_Store
 Thumbs.db

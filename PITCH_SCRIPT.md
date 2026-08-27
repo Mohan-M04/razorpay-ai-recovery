@@ -1,75 +1,78 @@
-# 🎙️ 5-Minute Pitch Video Script: RazorRecover AI
-**Razorpay AI Buildathon — Track 03: AI Revenue Recovery**
+# 🎙️ Master 5-Minute Pitch Script: RazorRecover AI (Full-Stack)
+**Razorpay AI Buildathon 2026 — Track 03: AI Revenue Recovery**
 
-> **Target Duration:** Exactly 4:30 – 5:00 minutes  
-> **Tools Recommended:** Loom, OBS Studio, or Google Meet recording.  
-> **Setup:** Have the dashboard running locally at `http://localhost:3000`.
+> **Target Duration:** 4:30 – 5:00 minutes  
+> **Tools Recommended:** Loom, OBS Studio, or Windows Screen Recorder (`Win + G`).  
+> **Setup:**
+> 1. Browser tab open to: `http://localhost:3000` (Frontend Dashboard)
+> 2. VS Code terminal open to: `razorpay-ai-recovery/backend`
 
 ---
 
-### [0:00 – 0:45] The Hook & The Problem
+### [0:00 – 0:45] The Problem & The Vision
 **[Camera: Facecam]**
 > *"Hi everyone, my name is Mohan, and this is my submission for the Razorpay AI Buildathon under Track 03: AI Revenue Recovery.*
 >
-> *Every single day, Indian merchants lose 15 to 30 percent of their top-line revenue to silent payment degradation. But here is the key insight: payment failure is almost never a clean, binary event. Sometimes it's a transient NPCI bank timeout. Sometimes an auto-debit fails simply because it occurred three days before payday. Sometimes a high-intent customer gets distracted at the 3DS OTP screen.*
+> *In Indian recurring subscription commerce, merchants lose 15 to 30 percent of their revenue every month to silent payment degradation. But payment failures are almost never intentional cancellations: it's an end-of-month cashflow delay, an expired card token, a temporary NPCI banking switch timeout, or a bank decline.*
 >
-> *Traditional payment gateways do one thing: they log the error code and abandon the merchant. I built **RazorRecover AI** to close that loop — transforming payment failures from lost revenue into autonomous, bounded recovery workflows."*
+> *Traditional gateways just log the error code and drop the customer. I built **RazorRecover AI** — a complete full-stack recovery platform that combines a Python deterministic state machine, a Hinglish voice assistant, and a React executive dashboard to recover lost revenue autonomously."*
 
 ---
 
-### [0:45 – 1:30] Architecture & The Bounded Bar
-**[Screen Share: Architecture Diagram in ARCHITECTURE.md or README.md]**
-> *"Before jumping into the demo, I want to talk about how RazorRecover AI approaches the evaluation bar.*
+### [0:45 – 1:30] Full-Stack Architecture & Safety
+**[Screen Share: ARCHITECTURE.md or README.md in VS Code]**
+> *"Before demoing the product, let's talk about the evaluation bar.*
 >
-> *In fintech, unbounded LLM agents that can do anything are dangerous. An agent could hallucinate unauthorized discounts or spam customers repeatedly. That's why RazorRecover AI is built as a **hybrid state machine with deterministic guardrails**.*
+> *In financial operations, unbounded LLM agents that can take arbitrary actions are dangerous. That's why RazorRecover AI is built as a **hybrid state machine with deterministic guardrails**.*
 >
-> *When a failure occurs, our AI Reasoner diagnoses the root cause based on error payloads, customer transaction history, and temporal patterns. But before any action is executed, it must pass through four strict guardrails: a 3-touch attempt cap, compliance checks, idempotent link generation, and a high-value gate that routes any transaction over ₹25,000 to a human VIP account manager.*
+> *Every failure is categorized into four operational archetypes: expired cards get self-serve update links without automated retries; low-balance debits get a 48-hour cooldown; switch timeouts get a 30-minute fast retry; and bank declines escalate to our Hinglish voice assistant.*
 >
-> *Every decision and state transition is captured in an immutable audit trail."*
+> *We enforce four strict stopping rules: a maximum of 3 retries, a 24-hour contact cooldown, a 2-call cap on voice outreach, and an immediate hard stop whenever a customer opts out or asks to cancel."*
 
 ---
 
-### [1:30 – 3:30] Live Interactive Product Demo
-**[Screen Share: Browser showing http://localhost:3000]**
-> *"Let's see this in action live on the dashboard.*
->
-> *(Click: 'New Batch - 60 Events')*
->
-> *Here we have loaded a batch of 60 synthetic payment failures across real Indian merchant archetypes — SaaS, D2C, and EdTech. You can see our starting state: over ₹3,40,000 in revenue currently at risk.*
+### [1:30 – 3:00] Part 1: The Executive Dashboard Demo
+**[Screen Share: Browser at http://localhost:3000]**
+> *"Let's look at the frontend dashboard.*
 >
 > *(Click: 'Run AI Diagnosis')*
 >
-> *Watch as the engine diagnoses all 60 events in under 2 seconds. Look at how it categorized them:*
-> - *For bank switch timeouts, it scheduled a quiet automated retry through a secondary gateway switch.*
-> - *For insufficient funds, it identified the customer's regular buying history and generated a 1-click Razorpay payment link scheduled near their salary window.*
-> - *For high-value B2B orders over ₹25,000, our guardrail kicked in and moved them to 'Escalated' for human handling.*
+> *Here we have loaded a batch of failed transactions. When I run AI Diagnosis, the engine classifies each failure in milliseconds. You can see our starting state: over ₹5 Lakhs at risk.*
 >
-> *(Click on a transaction row in the table)*
+> *(Click on a transaction row in the table to open the modal)*
 >
-> *Let's drill down into this payment of ₹2,999. In the modal, you can see the complete picture: the customer's past order count, the raw gateway error, the AI diagnosis with a 94% confidence score, the exact simulated WhatsApp message containing a secure Razorpay payment link, and the full audit trail.*
+> *Let's inspect this transaction. In the modal, you see the customer persona, the raw gateway error, the AI diagnostic explanation, the simulated WhatsApp message with a secure Razorpay payment link, and our policy guardrails all marked PASSED.*
 >
-> *(Click: 'Simulate Customer Payment')*
+> *(Click: 'Simulate Customer Recovery')*
 >
-> *When the customer clicks that link and pays, Razorpay webhooks confirm the settlement, transitioning the transaction to 'Recovered'.*
->
-> *(Close modal and Click: 'Simulate Customer Recovery')*
->
-> *Across the entire batch, you can see our KPI metrics update live. We recovered over ₹2,20,000 — achieving a **66% recovery rate**, while strictly halting 4 sequences that reached the max-attempt policy to protect merchant brand reputation."*
+> *When customers pay their recovery links or automated retries succeed, our KPI counters update live. Over ₹4.6 Lakhs recovered with a 60% conversion rate!"*
 
 ---
 
-### [3:30 – 4:30] Audit Trail & Compliance Rigor
-**[Screen Share: Modal Audit Trail or Click 'Export Audit Trail']**
-> *"Razorpay's prompt made one thing very clear: 'Don't just identify the problem. Show measured money recovered across a batch, with compliant escalation, stopping rules, and an audit trail.'*
+### [3:00 – 4:15] Part 2: Python Backend, Tests & Hinglish Voice Agent
+**[Screen Share: VS Code Terminal in backend/]**
+> *"Now let's switch to the Python backend that powers this engine.*
 >
-> *If we look at the exported audit log, every single event is tracked with ISO timestamps, actors, previous state, new state, and policy justification. Merchants have full observability. Regulators have full compliance evidence. And most importantly, not a single rupee is charged without explicit user authorization."*
+> *(Run: `.\test.bat`)*
+>
+> *Here you can see our automated test suite: 18 out of 18 unit tests passing in 0.12 seconds, verifying retry logic, safety gates, audit trail immutability, and sentence limits.*
+>
+> *(Run: `.\benchmark.bat`)*
+>
+> *Next, our evaluation harness runs over a 200-record held-out batch. It outputs a complete breakdown: ₹4,61,578 recovered across automated retries, self-serve card updates, voice recovery, and Promise-to-Pay tracking — with zero stopping-rule violations and 100% compliance.*
+>
+> *(Run: `.\run.bat` -> option 2)*
+>
+> *Finally, here is our 'RazorPay Recovery' voice assistant. When a customer says 'Salary 2 din baad aayegi', the assistant speaks warm, polite Hinglish, records a Promise-to-Pay due date, confirms it back, and queues an automated reminder without any harassment."*
 
 ---
 
-### [4:30 – 5:00] Conclusion & Why Razorpay
+### [4:15 – 5:00] Conclusion & Why Razorpay
 **[Camera: Facecam]**
-> *"RazorRecover AI turns payment operations from a cost center into a direct revenue driver. It's built with TypeScript, modular architecture, and integrates directly with Razorpay's Payment Links and Optimizer rails.*
+> *"RazorRecover AI bridges the gap between AI autonomy and strict financial compliance. It turns payment operations from a cost center into a direct revenue driver for Indian businesses.*
 >
-> *I'm thrilled about the opportunity to join Razorpay as an AI Builder Intern in Bangalore this September to bring systems like this into production for over 10 million Indian businesses.*
+> *Both the complete Python backend and the React frontend are published on my GitHub with full documentation and tests.*
 >
-> *Thank you, and I look forward to the technical panel!"*
+> *I am super excited about the opportunity to join Razorpay as an AI Builder Intern in Bangalore this September and build autonomous fintech systems that power millions of Indian merchants.*
+>
+> *Thank you so much!"*

@@ -1,0 +1,20 @@
+[project]
+name = "razorpay-subscription-recovery"
+version = "1.0.0"
+description = "AI Revenue Recovery Engine for Recurring Subscription Payments - Razorpay AI Buildathon Track 03"
+authors = [{ name = "Mohan & Antigravity" }]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "tabulate>=0.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
