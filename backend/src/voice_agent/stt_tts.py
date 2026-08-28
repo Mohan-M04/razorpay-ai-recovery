@@ -31,6 +31,9 @@ class SpeechToText:
         return ""
 
 
+import os
+
+
 class TextToSpeech:
     """Modular TTS engine converting Hinglish text into synthesized audio frames and real-time playback."""
 
@@ -47,6 +50,8 @@ class TextToSpeech:
     def speak_audio(self, text: str) -> None:
         """Plays the synthesized voice through the system audio speakers."""
         if not self.enable_audio_output or not self._speaker:
+            return
+        if "PYTEST_CURRENT_TEST" in os.environ:
             return
         try:
             # Clean URLs or symbols for cleaner pronunciation

@@ -28,6 +28,31 @@ def interactive_voice_demo():
     ptp_tracker = PromiseToPayTracker(db, audit)
     agent = VoiceRecoveryAgent(db, audit, gateway, ptp_tracker)
 
+    print("\nSelect Language for Voice Outreach Demo:")
+    print("1. Hinglish (Default)")
+    print("2. Kannada (ಕನ್ನಡ)")
+    print("3. Telugu (తెలుగు)")
+    print("4. Tamil (தமிழ்)")
+    print("5. English")
+    lang_choice = input("Select Language (1-5, default 1): ").strip()
+    lang_map = {
+        "1": "Hinglish",
+        "2": "Kannada",
+        "3": "Telugu",
+        "4": "Tamil",
+        "5": "English",
+    }
+    selected_lang = lang_map.get(lang_choice, "Hinglish")
+
+    names = {
+        "Kannada": ("Prajwal Gowda", "+919876543211"),
+        "Telugu": ("Venkat Reddy", "+919876543212"),
+        "Tamil": ("Karthik Subramanian", "+919876543213"),
+        "English": ("David Miller", "+919876543214"),
+        "Hinglish": ("Aarav Sharma", "+919876543210"),
+    }
+    cust_name, cust_contact = names.get(selected_lang, ("Aarav Sharma", "+919876543210"))
+
     now = datetime(2026, 8, 27, 10, 0, 0)
     sub = SubscriptionRecord(
         subscription_id="sub_live_demo",
@@ -37,9 +62,9 @@ def interactive_voice_demo():
         failure_reason=FailureReason.BANK_DECLINED,
         attempt_count=1,
         last_attempt_at=now,
-        customer_contact="+919876543210",
-        language_pref="Hinglish",
-        customer_name="Aarav Sharma",
+        customer_contact=cust_contact,
+        language_pref=selected_lang,
+        customer_name=cust_name,
         merchant_name="CultFitness Live",
         plan_name="Monthly Unlimited Pass",
         state=SubscriptionState.VOICE_ESCALATED,

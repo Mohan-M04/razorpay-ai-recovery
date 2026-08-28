@@ -140,3 +140,27 @@ def test_response_sentence_count_limit():
         clean_text = re.sub(r"https?://\S+", "[LINK]", resp)
         sentences = [s for s in clean_text.replace("!", ".").replace("?", ".").split(".") if s.strip()]
         assert len(sentences) <= 3, f"Intent {intent} returned {len(sentences)} sentences (exceeds limit 3)"
+
+
+def test_multilingual_support():
+    for lang in ["Kannada", "Telugu", "Tamil", "English"]:
+        greeting = generate_initial_greeting(
+            customer_name="Prajwal Gowda",
+            amount=1499.0,
+            merchant_name="CultFitness",
+            plan_name="Monthly Pass",
+            language=lang,
+        )
+        assert len(greeting) > 10
+        assert "Prajwal" in greeting
+
+        # Test opt-out in each language
+        resp, _, action = generate_dialogue_turn(
+            intent="OPT_OUT_CANCEL",
+            customer_name="Prajwal Gowda",
+            amount=1499.0,
+            merchant_name="CultFitness",
+            language=lang,
+        )
+        assert action == "ACTION_OPT_OUT"
+        assert len(resp) > 10

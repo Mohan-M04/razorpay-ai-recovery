@@ -81,6 +81,7 @@ class VoiceRecoveryAgent:
             amount=sub.amount,
             merchant_name=sub.merchant_name,
             plan_name=sub.plan_name,
+            language=sub.language_pref,
         )
 
         self.audit.log(
@@ -128,6 +129,7 @@ class VoiceRecoveryAgent:
             payment_link_url=plink["short_url"],
             entities=entities,
             current_time=current_time,
+            language=sub.language_pref,
         )
 
         old_state = sub.state.value
