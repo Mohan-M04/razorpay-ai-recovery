@@ -49,13 +49,13 @@
 
 ---
 
-### [3:00 – 4:15] Part 2: Python Backend, Tests & Hinglish Voice Agent
+### [3:00 – 4:15] Part 2: Python Backend, Tests & Multilingual Voice Agent
 **[Screen Share: VS Code Terminal in backend/]**
 > *"Now let's switch to the Python backend that powers this engine.*
 >
 > *(Run: `.\test.bat`)*
 >
-> *Here you can see our automated test suite: 18 out of 18 unit tests passing in 0.12 seconds, verifying retry logic, safety gates, audit trail immutability, and sentence limits.*
+> *Here you can see our automated test suite: 19 out of 19 unit tests passing in 0.28 seconds, verifying retry logic, safety gates, audit trail immutability, sentence limits, and multilingual dialogue generation.*
 >
 > *(Run: `.\benchmark.bat`)*
 >
@@ -63,7 +63,11 @@
 >
 > *(Run: `.\run.bat` -> option 2)*
 >
-> *Finally, here is our 'RazorPay Recovery' voice assistant. When a customer says 'Salary 2 din baad aayegi', the assistant speaks warm, polite Hinglish, records a Promise-to-Pay due date, confirms it back, and queues an automated reminder without any harassment."*
+> *Finally, here is our conversational voice assistant, 'RazorPay Recovery'. We built native support for Indian regional languages: Kannada, Telugu, Tamil, and Hinglish.*
+>
+> *(Select language: 2 for Kannada)*
+>
+> *Watch how the assistant greets in native Kannada: 'Namaskara Prajwal avare...'. And when the customer says 'Erad dina aamele pay maadthini', it dynamically calculates the Promise-to-Pay due date for 30 August, confirms it back in polite Kannada, and schedules an automated reminder!"*
 
 ---
 

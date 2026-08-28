@@ -6,7 +6,7 @@
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python)](https://python.org)
 [![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Unit Tests](https://img.shields.io/badge/Unit_Tests-18%2F18_Passing-10B981?style=for-the-badge)]()
+[![Unit Tests](https://img.shields.io/badge/Unit_Tests-19%2F19_Passing-10B981?style=for-the-badge)]()
 [![Safety Compliance](https://img.shields.io/badge/Safety_Compliance-100%25_Audited-3B82F6?style=for-the-badge)]()
 
 ---
@@ -20,7 +20,7 @@ In Indian recurring subscription commerce (SaaS, OTT, EdTech, Fitness, D2C Subsc
 * **`card_expired` (15%):** Card token expired without updated payment details.
 
 **RazorRecover AI is a production-ready, full-stack revenue recovery system** combining:
-1. 🐍 **Python Core Engine (`/backend`):** A finite state machine retry sequencer, deterministic safety gates, an append-only SQLite audit trail, a **Promise-to-Pay (PTP) tracker**, and a polite **Hinglish voice recovery agent ("RazorPay Recovery")**.
+1. 🐍 **Python Core Engine (`/backend`):** A finite state machine retry sequencer, deterministic safety gates, an append-only SQLite audit trail, a **Promise-to-Pay (PTP) tracker**, and a **Multilingual voice recovery assistant ("RazorPay Recovery" in Kannada, Telugu, Tamil, Hinglish, and English)**.
 2. 🌐 **Executive Visual Dashboard (`/frontend`):** A modern dark-mode React/TypeScript application visualizing live failure feeds, real-time KPI metrics, guardrail matrices, and an interactive payment simulator.
 
 ---
@@ -105,32 +105,33 @@ Job: Explain failed payment, offer exactly one clear solution, handle objections
 
 ---
 
-## 🧪 Unit Tests: 18 / 18 Passing
+## 🧪 Unit Tests: 19 / 19 Passing
 
 ```bash
 $ cd backend
 $ .\test.bat
 
 tests/test_audit.py::test_audit_trail_logging_and_retrieval PASSED       [  5%]
-tests/test_audit.py::test_audit_trail_query_by_subscription_isolation PASSED [ 11%]
-tests/test_ptp.py::test_record_and_fulfill_promise PASSED                [ 16%]
-tests/test_ptp.py::test_broken_promise PASSED                            [ 22%]
-tests/test_ptp.py::test_ptp_reminder_scheduling PASSED                   [ 27%]
-tests/test_safety_gates.py::test_max_three_retries_stopping_rule PASSED  [ 33%]
-tests/test_safety_gates.py::test_twenty_four_hour_contact_cooldown PASSED [ 38%]
-tests/test_safety_gates.py::test_max_voice_attempts PASSED               [ 44%]
-tests/test_safety_gates.py::test_hard_stop_on_opt_out PASSED             [ 50%]
-tests/test_sequencer.py::test_card_expired_prompts_update_without_auto_retry PASSED [ 55%]
-tests/test_sequencer.py::test_insufficient_funds_schedules_48h_retry PASSED [ 61%]
-tests/test_sequencer.py::test_gateway_timeout_schedules_30m_retry PASSED [ 66%]
-tests/test_sequencer.py::test_bank_declined_escalates_to_voice_immediately PASSED [ 72%]
-tests/test_voice_agent.py::test_greeting_compliance PASSED               [ 77%]
-tests/test_voice_agent.py::test_opt_out_hard_stop PASSED                 [ 83%]
-tests/test_voice_agent.py::test_promise_to_pay_dialogue PASSED           [ 88%]
-tests/test_voice_agent.py::test_card_update_dialogue PASSED              [ 94%]
-tests/test_voice_agent.py::test_response_sentence_count_limit PASSED     [100%]
+tests/test_audit.py::test_audit_trail_query_by_subscription_isolation PASSED [ 10%]
+tests/test_ptp.py::test_record_and_fulfill_promise PASSED                [ 15%]
+tests/test_ptp.py::test_broken_promise PASSED                            [ 21%]
+tests/test_ptp.py::test_ptp_reminder_scheduling PASSED                   [ 26%]
+tests/test_safety_gates.py::test_max_three_retries_stopping_rule PASSED  [ 31%]
+tests/test_safety_gates.py::test_twenty_four_hour_contact_cooldown PASSED [ 36%]
+tests/test_safety_gates.py::test_max_voice_attempts PASSED               [ 42%]
+tests/test_safety_gates.py::test_hard_stop_on_opt_out PASSED             [ 47%]
+tests/test_sequencer.py::test_card_expired_prompts_update_without_auto_retry PASSED [ 52%]
+tests/test_sequencer.py::test_insufficient_funds_schedules_48h_retry PASSED [ 57%]
+tests/test_sequencer.py::test_gateway_timeout_schedules_30m_retry PASSED [ 63%]
+tests/test_sequencer.py::test_bank_declined_escalates_to_voice_immediately PASSED [ 68%]
+tests/test_voice_agent.py::test_greeting_compliance PASSED               [ 73%]
+tests/test_voice_agent.py::test_opt_out_hard_stop PASSED                 [ 78%]
+tests/test_voice_agent.py::test_promise_to_pay_dialogue PASSED           [ 84%]
+tests/test_voice_agent.py::test_card_update_dialogue PASSED              [ 89%]
+tests/test_voice_agent.py::test_response_sentence_count_limit PASSED     [ 94%]
+tests/test_voice_agent.py::test_multilingual_support PASSED              [100%]
 
-============================= 18 passed in 0.12s ==============================
+============================= 19 passed in 0.28s ==============================
 ```
 
 ---
