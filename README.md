@@ -8,6 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Unit Tests](https://img.shields.io/badge/Unit_Tests-19%2F19_Passing-10B981?style=for-the-badge)]()
 [![Safety Compliance](https://img.shields.io/badge/Safety_Compliance-100%25_Audited-3B82F6?style=for-the-badge)]()
+[![Watch 5-Min Walkthrough](https://img.shields.io/badge/Demo_Video-Watch_on_Loom-625DF5?style=for-the-badge&logo=loom)](https://www.loom.com/share/9a80f21e08bf425998375453348ee4f8)
 
 ---
 
