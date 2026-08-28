@@ -71,10 +71,9 @@ def interactive_voice_demo():
     )
     db.save_subscription(sub)
 
-    # Initial greeting
     audio = agent.start_call(sub, now)
     greeting = audit.get_logs(sub.subscription_id)[-1].metadata.get("greeting", "")
-    print(f"🤖 [RazorPay Recovery]: {greeting}\n")
+    print(f"\n🤖 [RazorPay Recovery ({selected_lang})]: {greeting}\n")
 
     while True:
         while True:

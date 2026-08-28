@@ -1,10 +1,11 @@
 """
 Speech-to-Text (STT) and Text-to-Speech (TTS) modular components.
-Supports offline audio synthesis and real-time speaker playback via Windows SAPI / pyttsx3.
+Supports offline audio synthesis and non-blocking real-time speaker playback via Windows SAPI.
 """
 
 from dataclasses import dataclass
 from typing import Optional
+import os
 import threading
 
 
@@ -20,10 +21,6 @@ class SpeechToText:
     """Modular STT engine with offline simulation and pluggable API integration."""
 
     def transcribe(self, input_data: str | AudioPayload) -> str:
-        """
-        Converts speech audio into text transcript.
-        If given a string (simulation mode), strips and returns directly.
-        """
         if isinstance(input_data, str):
             return input_data.strip()
         elif isinstance(input_data, AudioPayload):
@@ -31,39 +28,38 @@ class SpeechToText:
         return ""
 
 
-import os
-
-
-class TextToSpeech:
-    """Modular TTS engine converting Hinglish text into synthesized audio frames and real-time playback."""
-
-    def __init__(self, enable_audio_output: bool = True):
-        self.enable_audio_output = enable_audio_output
-        self._speaker = None
-        if self.enable_audio_output:
-            try:
-                import win32com.client
-                self._speaker = win32com.client.Dispatch("SAPI.SpVoice")
-            except Exception:
-                self._speaker = None
-
-    def speak_audio(self, text: str) -> None:
-        """Plays the synthesized voice through the system audio speakers."""
-        if not self.enable_audio_output or not self._speaker:
-            return
-        if "PYTEST_CURRENT_TEST" in os.environ:
-            return
+def _speak_in_background(text: str):
+    """Speaks text in a background thread so the terminal never hangs."""
+    try:
+        import pythoncom
+        import win32com.client
+        pythoncom.CoInitialize()
+        speaker = win32com.client.Dispatch("SAPI.SpVoice")
+        clean = text.replace("https://rzp.io", "razor pay link")
+        speaker.Speak(clean)
+    except Exception:
+        pass
+    finally:
         try:
-            # Clean URLs or symbols for cleaner pronunciation
-            clean = text.replace("https://rzp.io", "razor pay dot I O")
-            self._speaker.Speak(clean)
+            pythoncom.CoUninitialize()
         except Exception:
             pass
 
+
+class TextToSpeech:
+    """Modular TTS engine converting text into synthesized audio frames and real-time playback."""
+
+    def __init__(self, enable_audio_output: bool = True):
+        self.enable_audio_output = enable_audio_output
+
+    def speak_audio(self, text: str) -> None:
+        """Plays the synthesized voice in background without blocking."""
+        if not self.enable_audio_output or "PYTEST_CURRENT_TEST" in os.environ:
+            return
+        t = threading.Thread(target=_speak_in_background, args=(text,), daemon=True)
+        t.start()
+
     def synthesize(self, text: str, voice_id: str = "hi-IN-SwaraNeural", play_audio: bool = True) -> AudioPayload:
-        """
-        Converts text into audio payload and plays audio through speakers if requested.
-        """
         if play_audio and self.enable_audio_output:
             self.speak_audio(text)
 
