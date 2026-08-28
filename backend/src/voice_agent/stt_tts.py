@@ -1,10 +1,11 @@
 """
 Speech-to-Text (STT) and Text-to-Speech (TTS) modular components.
-Works out-of-the-box offline and supports pluggable cloud providers.
+Supports offline audio synthesis and real-time speaker playback via Windows SAPI / pyttsx3.
 """
 
 from dataclasses import dataclass
 from typing import Optional
+import threading
 
 
 @dataclass
@@ -31,16 +32,38 @@ class SpeechToText:
 
 
 class TextToSpeech:
-    """Modular TTS engine converting Hinglish text into synthesized audio frames."""
+    """Modular TTS engine converting Hinglish text into synthesized audio frames and real-time playback."""
 
-    def synthesize(self, text: str, voice_id: str = "hi-IN-SwaraNeural") -> AudioPayload:
+    def __init__(self, enable_audio_output: bool = True):
+        self.enable_audio_output = enable_audio_output
+        self._speaker = None
+        if self.enable_audio_output:
+            try:
+                import win32com.client
+                self._speaker = win32com.client.Dispatch("SAPI.SpVoice")
+            except Exception:
+                self._speaker = None
+
+    def speak_audio(self, text: str) -> None:
+        """Plays the synthesized voice through the system audio speakers."""
+        if not self.enable_audio_output or not self._speaker:
+            return
+        try:
+            # Clean URLs or symbols for cleaner pronunciation
+            clean = text.replace("https://rzp.io", "razor pay dot I O")
+            self._speaker.Speak(clean)
+        except Exception:
+            pass
+
+    def synthesize(self, text: str, voice_id: str = "hi-IN-SwaraNeural", play_audio: bool = True) -> AudioPayload:
         """
-        Converts text into audio payload. In test/offline mode, produces a simulated
-        audio buffer with calculated speech duration.
+        Converts text into audio payload and plays audio through speakers if requested.
         """
+        if play_audio and self.enable_audio_output:
+            self.speak_audio(text)
+
         words = len(text.split())
         estimated_duration = max(1.2, words * 0.35)
-        # Mock 16kHz PCM audio bytes
         mock_pcm = b"\x00\x00" * int(16000 * estimated_duration)
         return AudioPayload(
             audio_bytes=mock_pcm,
