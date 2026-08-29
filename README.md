@@ -137,22 +137,31 @@ tests/test_voice_agent.py::test_multilingual_support PASSED              [100%]
 
 ---
 
-## 🚀 Quickstart & How to Run
+## 🚀 Quickstart for Evaluators & Judges
 
-### 1. Run the Python Backend & Benchmarks
-```powershell
-cd backend
-.\benchmark.bat     # Runs 200-record benchmark table
-.\test.bat          # Runs all 18 unit tests
-.\run.bat           # Interactive Hinglish voice assistant demo
+### ⚡ Universal 1-Line Commands (Windows, macOS & Linux):
+
+Clone and run directly from the repository root:
+```bash
+# 1. Run the 200-Record Evaluation Benchmark Table
+python run.py benchmark
+
+# 2. Run All 19 Automated Unit Tests (Passes in 0.28s)
+python run.py test
+
+# 3. Interactive Multilingual Voice Recovery Assistant (Kannada, Telugu, Tamil, Hinglish, English)
+python run.py
 ```
 
-### 2. Run the Visual Web Dashboard
-```powershell
+### 🌐 Run the Executive Web Dashboard:
+```bash
 cd frontend
+npm install
 npm run dev
 ```
 Open **`http://localhost:3000`** in your browser.
+
+*(Windows users can also use `.\test.bat`, `.\benchmark.bat`, and `.\run.bat` in `backend/`)*
 
 ---
 
