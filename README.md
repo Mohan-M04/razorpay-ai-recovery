@@ -199,6 +199,6 @@ razorpay-ai-recovery/
 ---
 
 ## 📜 Submission Details
-* **Author:** Mohan & Antigravity
+* **Author:** Mohan M
 * **Buildathon Track:** Track 03 — AI Revenue Recovery
 * **Target Role:** Razorpay AI Builder Intern (Bangalore, from September)
